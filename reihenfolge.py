@@ -71,7 +71,6 @@ def lever(x): # I agree it's a bad code but "for i in array" doesn't work :\
         canvas.tag_bind(r8, '<Button-1>', lambda event: change_color(r8));
         canvas.tag_bind(r9, '<Button-1>', lambda event: change_color(r9));
 
-
 def start_level():
     global seq;
     wp.config(text = 'Wait...', fg = '#f00');
@@ -157,7 +156,8 @@ def game():
 
 root = Tk();
 root.title('Reihenfolge');
-root.geometry('500x300');
+root.geometry('460x180');
+root.resizable(width = False, height = False);
 
 canvas = Canvas(root);
 r1 = crr(60, 10, 10, 60);
