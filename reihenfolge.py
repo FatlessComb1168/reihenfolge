@@ -169,7 +169,7 @@ wp.place(x = 170, y = 78);
 Label(text = 'Game by Fedor Egorov aka FatlessComb1168', font = ('Arial',
     8)).place(x = 170, y = 103);
 
-links('(GitHub)', 395, 104, "https://github.com/FatlessComb1168");
+links('(GitHub)', 395, 103, "https://github.com/FatlessComb1168");
 links('Reihenfolge on GitHub', 170, 123,
     "https://github.com/FatlessComb1168/reihenfolge");
 links('Learn more about GNU GPL v3.0...', 170, 143,
