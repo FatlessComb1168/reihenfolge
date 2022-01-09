@@ -24,9 +24,6 @@ from threading import Thread;
 from webbrowser import open_new;
 from os import _exit;
 
-def open_site(url):
-    open_new(url);
-
 def on_close():
     _exit(1);
 
@@ -45,31 +42,7 @@ def links(text, x, y, l):
     link = Label(text = text, font = ('Arial',
         8), fg = 'blue', cursor = 'hand2', underline = True);
     link.place(x = x, y = y);
-    link.bind("<Button-1>", lambda e:
-        open_site(l));
-
-def lever(x): # I agree it's a bad code but "for i in array" doesn't work :\
-    if x == 0: # Block
-        canvas.tag_bind(r1, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r2, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r3, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r4, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r5, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r6, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r7, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r8, '<Button-1>', lambda event: 0);
-        canvas.tag_bind(r9, '<Button-1>', lambda event: 0);
-
-    if x == 1: # Unblock
-        canvas.tag_bind(r1, '<Button-1>', lambda event: change_color(r1));
-        canvas.tag_bind(r2, '<Button-1>', lambda event: change_color(r2));
-        canvas.tag_bind(r3, '<Button-1>', lambda event: change_color(r3));
-        canvas.tag_bind(r4, '<Button-1>', lambda event: change_color(r4));
-        canvas.tag_bind(r5, '<Button-1>', lambda event: change_color(r5));
-        canvas.tag_bind(r6, '<Button-1>', lambda event: change_color(r6));
-        canvas.tag_bind(r7, '<Button-1>', lambda event: change_color(r7));
-        canvas.tag_bind(r8, '<Button-1>', lambda event: change_color(r8));
-        canvas.tag_bind(r9, '<Button-1>', lambda event: change_color(r9));
+    link.bind("<Button-1>", lambda e: open_new(l));
 
 def start_level():
     global seq;
@@ -88,71 +61,66 @@ def start_level():
     clear();
 
 def change_color(r):
-    global seq, seq2, temp, re, re_a, subscore, score_lbl;
-    seq2.append(r);
-    clear();
-    temp += 1;
+    global seq, seq2, temp, re, re_a, subscore, score_lbl, lever;
+    if lever == True:
+        seq2.append(r);
+        clear();
+        temp += 1;
 
-    if seq2[temp] == seq[temp]:
-        if temp == level:
-            canvas.itemconfig(r, fill = '#0f0', outline = '#000');
-        else:
-            if seq2[temp] == seq2[temp - 1]:
-                re += 1;
-                if re >= 10:
-                    canvas.itemconfig(r,
-                        fill = f'#{re_a[re - 10] * 3}', outline = '#000');
-                else:
-                    canvas.itemconfig(r, fill = f'#{str(re) * 3}',
-                        outline = '#000');
-
+        if seq2[temp] == seq[temp]:
+            if temp == level:
+                canvas.itemconfig(r, fill = '#0f0', outline = '#000');
             else:
-                canvas.itemconfig(r, fill = '#000', outline = '#000');
-        
-        subscore += 1;
-        score_lbl.config(text = f'Score: {subscore}');
-        
-    else:
-        canvas.itemconfig(r, fill = '#f00', outline = '#000');
-        lever(0);
+                if seq2[temp] == seq2[temp - 1]:
+                    re += 1;
+                    if re >= 10:
+                        canvas.itemconfig(r,
+                            fill = f'#{re_a[re - 10] * 3}', outline = '#000');
+                    else:
+                        canvas.itemconfig(r, fill = f'#{str(re) * 3}',
+                            outline = '#000');
 
-    print('Player sequence:', seq2, "Game's sequence:", seq);
+                else:
+                    canvas.itemconfig(r, fill = '#000', outline = '#000');
+            
+            subscore += 1;
+            score_lbl.config(text = f'Score: {subscore}');
+            
+        else:
+            canvas.itemconfig(r, fill = '#f00', outline = '#000');
+            lever = False;
+
+        print('Player sequence:', seq2, "Game's sequence:", seq);
 
 def game():
-    global seq, seq2, temp, level, re, lvl_name, score, subscore;
+    global seq, seq2, temp, level, re, lvl_name, score, subscore, lever;
     
     while True:
-        lever(0);
+        lever = False;
         start_level();
-        lever(1);
+        lever = True;
 
         seq2 = [];
         temp = -1;
         re = 0;
         subscore = score;
 
-        while temp < level:
-            if temp >= 0:
-                if seq2[temp] != seq[temp]:
+        while temp <= level:
+            if temp >= 0 and seq2[temp] != seq[temp]:
                     print('Incorrect!');
-                    lever(0);
+                    lever = False;
                     sleep(1);
                     break;
 
-        if seq2[temp] != seq[temp]:
-            print('Incorrect!');
-            lever(0);
-            score_lbl.config(text = f'Score: {score}');
-            sleep(1);
-        
-        if seq2[temp] == seq[temp]:
-            level += 1;
-            print('Nice! The next level is', level + 1);
-            lvl_name.config(text = f'Level {level + 1}');
-            score = subscore;
-            score_lbl.config(text = f'Score: {score}');
-            lever(0);
-            sleep(1);
+            elif level == temp and seq2[temp] == seq[temp]:
+                level += 1;
+                print('Nice! The next level is', level + 1);
+                lvl_name.config(text = f'Level {level + 1}');
+                score = subscore;
+                score_lbl.config(text = f'Score: {score}');
+                lever = False;
+                sleep(1);
+                break;
 
 root = Tk();
 root.title('Reihenfolge');
@@ -171,29 +139,31 @@ r8 = crr(60, 110, 110, 160);
 r9 = crr(110, 110, 160, 160);
 canvas.pack(fill = 'both', expand = 1);
 
+canvas.tag_bind(r1, '<Button-1>', lambda event: change_color(r1));
+canvas.tag_bind(r2, '<Button-1>', lambda event: change_color(r2));
+canvas.tag_bind(r3, '<Button-1>', lambda event: change_color(r3));
+canvas.tag_bind(r4, '<Button-1>', lambda event: change_color(r4));
+canvas.tag_bind(r5, '<Button-1>', lambda event: change_color(r5));
+canvas.tag_bind(r6, '<Button-1>', lambda event: change_color(r6));
+canvas.tag_bind(r7, '<Button-1>', lambda event: change_color(r7));
+canvas.tag_bind(r8, '<Button-1>', lambda event: change_color(r8));
+canvas.tag_bind(r9, '<Button-1>', lambda event: change_color(r9));
+
 array = [r1, r2, r3, r4, r5, r6, r7, r8, r9];
-seq = []; # Game's sequence
-seq2 = []; # Player's sequence
 level = 0;
 score = 0;
-subscore = 0;
-temp = -1;
-re = 0;
 re_a = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 Label(text = 'Reihenfolge', font = ('Arial',
     16, 'bold')).place(x = 170, y = 8);
 
-lvl_name = Label(text = f'Level {level + 1}', font = ('Arial',
-    12));
+lvl_name = Label(text = f'Level {level + 1}', font = ('Arial', 12));
 lvl_name.place(x = 170, y = 38);
 
-score_lbl = Label(text = f'Score: {score}', font = ('Arial',
-    12));
+score_lbl = Label(text = f'Score: {score}', font = ('Arial', 12));
 score_lbl.place(x = 170, y = 58);
 
-wp = Label(text = 'Wait...', font = ('Arial',
-    12, 'bold'), fg = '#f00');
+wp = Label(text = 'Wait...', font = ('Arial', 12, 'bold'), fg = '#f00');
 wp.place(x = 170, y = 78);
 
 Label(text = 'Game by Fedor Egorov aka FatlessComb1168', font = ('Arial',
