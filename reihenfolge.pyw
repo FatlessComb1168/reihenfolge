@@ -1,6 +1,6 @@
 '''
 Reihenfolge.
-Copyright (C) 2022 by Fedor Egorov <fedoregorov1@yandex.ru>
+Copyright (C) 2022 by Fedor Egorov
 This file is part of Reihenfolge.
 
 Reihenfolge is free software: you can redistribute it and/or modify
