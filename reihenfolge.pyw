@@ -352,12 +352,12 @@ score_lbl.place(x = 170, y = 58);
 wp = Label(text = 'Wait...', font = ('Arial', 12, 'bold'), fg = '#f00');
 wp.place(x = 170, y = 78);
 
-Label(text = 'Game by Fedor Egorov aka FatlessComb1168', font = ('Arial',
+Label(text = 'Game by Fedor Egorov aka Axelblatt', font = ('Arial',
     8)).place(x = 170, y = 103);
 
-links('(GitHub)', 395, 103, "https://github.com/FatlessComb1168");
+links('(GitHub)', 395, 103, "https://github.com/axelblatt");
 links('Reihenfolge on GitHub', 170, 123,
-    "https://github.com/FatlessComb1168/reihenfolge");
+    "https://github.com/axelblatt/reihenfolge");
 links('Learn more about GNU GPL v3.0...', 170, 143,
     "https://www.gnu.org/licenses/gpl-3.0.en.html");
 
